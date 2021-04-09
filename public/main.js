@@ -1,27 +1,69 @@
-const deleteButtons = Array.from(document.querySelectorAll(".delete"))
+const deleteBtn = document.querySelectorAll('.delete')
+const todoItem = document.querySelectorAll('span.not')
+const todoComplete = document.querySelectorAll('span.completed')
 
-deleteButtons.forEach(button => {
-    button.addEventListener("click", deleteOnServer)
+Array.from(deleteBtn).forEach((el)=>{
+    el.addEventListener('click', deleteTodo)
 })
 
-async function deleteOnServer(){
-    console.log(this.parentElement.childNodes[1].innerText, this.parentElement.childNodes[3].innerText)
-    const quoteAuthor = this.parentElement.childNodes[1].innerText;
-    const quoteBody = this.parentElement.childNodes[3].innerText;
+Array.from(todoItem).forEach((el)=>{
+    el.addEventListener('click', markComplete)
+})
+
+Array.from(todoComplete).forEach((el)=>{
+    el.addEventListener('click', markIncomplete)
+})
+
+async function deleteTodo(){
+    const todoId = this.parentNode.dataset.id
     try{
-        const response = await fetch("deleteQuote", {
-            method: "delete",
-            headers: {"Content-Type" : "application/json"},
+        const response = await fetch('todos/deleteTodo', {
+            method: 'delete',
+            headers: {'Content-type': 'application/json'},
             body: JSON.stringify({
-                authorName: quoteAuthor,
-                quoteBody : quoteBody
+                'todoIdFromJSFile': todoId
             })
         })
         const data = await response.json()
         console.log(data)
         location.reload()
+    }catch(err){
+        console.log(err)
     }
-    catch(err){
+}
+
+async function markComplete(){
+    const todoId = this.parentNode.dataset.id
+    try{
+        const response = await fetch('todos/markComplete', {
+            method: 'put',
+            headers: {'Content-type': 'application/json'},
+            body: JSON.stringify({
+                'todoIdFromJSFile': todoId
+            })
+        })
+        const data = await response.json()
+        console.log(data)
+        location.reload()
+    }catch(err){
+        console.log(err)
+    }
+}
+
+async function markIncomplete(){
+    const todoId = this.parentNode.dataset.id
+    try{
+        const response = await fetch('todos/markIncomplete', {
+            method: 'put',
+            headers: {'Content-type': 'application/json'},
+            body: JSON.stringify({
+                'todoIdFromJSFile': todoId
+            })
+        })
+        const data = await response.json()
+        console.log(data)
+        location.reload()
+    }catch(err){
         console.log(err)
     }
 }

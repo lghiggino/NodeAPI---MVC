@@ -4,10 +4,9 @@ const Todo = require("../models/Todo")
 
 const todosController = {
     getTodos : async (request, response) => {
-        console.log(Todo)
         try{
             const todoItems = await Todo.find()
-            const itemsLeft = await Todo.countDocument({completed:false})
+            const itemsLeft = await Todo.countDocuments({completed: false})  
             response.render("todos.ejs", {todos: todoItems, left: itemsLeft})
         }catch(err){
             console.log(err)
